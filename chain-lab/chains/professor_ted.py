@@ -1,65 +1,51 @@
-from langchain_openai import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain, SequentialChain
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.runnables import RunnableLambda
+from langchain_core.output_parsers import StrOutputParser
+from langchain.memory import ConversationBufferMemory
 from dotenv import load_dotenv
 from datetime import datetime
-import os
 
 load_dotenv()
-llm = OpenAI(temperature=0.7)
+llm = ChatOpenAI(temperature=0.7)
 
+# Simple in-memory buffer for current session
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+# Timestamp for tracking
 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+# Step 1: Encouragement
+encourage_prompt = ChatPromptTemplate.from_messages([
+    MessagesPlaceholder("chat_history"),
+    ("system", "[Professor Ted] You are a friendly full-stack coding coach."),
+    ("human", 'A junior developer shares this idea: "{idea}". Offer a brief, supportive review.')
+])
+encourage_chain = encourage_prompt | llm | StrOutputParser()
 
-# Step 1: Encouraging Review
-idea_prompt = PromptTemplate(
-    input_variables=["idea"],
-    template="""
-[Professor Ted]
+# Step 2: Critique
+critique_prompt = ChatPromptTemplate.from_messages([
+    MessagesPlaceholder("chat_history"),
+    ("system", "[Professor Ted] Based on this evaluation: \"{evaluation}\" What are 1–2 challenges or improvements the student might consider? Be kind but direct.")
+])
+critique_chain = critique_prompt | llm | StrOutputParser()
 
-You are a friendly full-stack coding coach.
+# Step 3: Refined Idea
+refine_prompt = ChatPromptTemplate.from_messages([
+    MessagesPlaceholder("chat_history"),
+    ("system", "[Professor Ted] Based on these thoughts: \"{critique}\" Suggest a more refined project idea or next step. Keep it short and inspiring.")
+])
+refine_chain = refine_prompt | llm | StrOutputParser()
 
-A junior developer shares this idea: "{idea}"
-
-Offer a brief, supportive review of the idea. Respond like you're encouraging a student.
-"""
-)
-idea_chain = LLMChain(llm=llm, prompt=idea_prompt, output_key="evaluation")
-
-# Step 2: Constructive Critique
-critique_prompt = PromptTemplate(
-    input_variables=["evaluation"],
-    template="""
-[Professor Ted]
-
-Based on this evaluation: "{evaluation}"
-
-What are 1–2 challenges or improvements the student might consider?
-Be kind but direct.
-"""
-)
-critique_chain = LLMChain(llm=llm, prompt=critique_prompt, output_key="critique")
-
-# Step 3: Refined Suggestion
-refine_prompt = PromptTemplate(
-    input_variables=["critique"],
-    template="""
-[Professor Ted]
-
-Based on these thoughts: "{critique}"
-
-Suggest a more refined project idea or next step the student can take.
-Keep it short and inspiring.
-"""
-)
-refine_chain = LLMChain(llm=llm, prompt=refine_prompt, output_key="refined")
-
-# Full sequential chain including intro
-ted_chain = SequentialChain(
-    chains=[idea_chain, critique_chain, refine_chain],
-    input_variables=["idea"],
-    output_variables=["evaluation", "critique", "refined"],
-    verbose=True
+# Chain steps together
+ted_chain = (
+    RunnableLambda(lambda x: x)
+    .assign(evaluation=encourage_chain)
+    .assign(critique=critique_chain)
+    .assign(refined=refine_chain)
+    .with_config({"run_name": "professor_ted"})
 )
 
+# Export for use in main.py
 __timestamp__ = timestamp
+__memory__ = memory

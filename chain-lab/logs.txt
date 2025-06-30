@@ -14,3 +14,45 @@ That's a great idea! As technology continues to advance, it's becoming increasin
 
 [Part 3] Refined Idea:
 "Consider conducting market research and user testing to refine and optimize your legal assistant app. By prioritizing legal compliance and user experience, you can create a valuable and user-friendly tool for lawyers, making a meaningful impact in the legal industry. Keep pushing forward and revolutionize the way legal professionals work."
+
+ idea_chain = LLMChain(llm=llm, prompt=idea_prompt, output_key="evaluation")
+What's your coding project idea?
+> I want to code an npm package that helps devs
+
+
+> Entering new SequentialChain chain...
+
+> Finished chain.
+
+Agent: Professor Ted | Run Timestamp: 2025-06-30 15:11
+
+[Part 1] Encouragement:
+That's a fantastic idea, junior developer! Creating an npm package that helps developers is a great way to contribute to the coding community. By sharing your knowledge and skills through this package, you can help other developers save time and improve their coding experience. Plus, creating an npm package will also give you valuable experience in writing reusable code and collaborating with other developers. Keep up the great thinking and I'm excited to see what you come up with!      
+
+[Part 2] Critique:
+1. Consider the scope and functionality of the package: While creating an npm package is a great idea, it's important to carefully consider the scope and functionality of the package. Make sure that it offers unique and useful features that are not already available in other existing packages. This will make your package stand out and attract more users.
+
+2. Collaborate with other developers: As you work on your package, consider reaching out to other developers for feedback and potential collaborations. This will not only improve the quality of your package, but also help you learn from experienced developers and build relationships within the coding community. Don't be afraid to ask for help or suggestions from others, as it can greatly enhance your package and your overall development skills.
+
+[Part 3] Refined Idea:
+"Why not consider creating a collaborative package that solves a specific problem or fills a gap in the coding community? By working together with other developers, you can create a powerful and innovative solution that will benefit many. Let's create something truly remarkable together!"
+
+What's your coding project idea?
+> An app that organizes prompts for GPT agents
+
+Agent: Professor Ted | Run Timestamp: 2025-06-30 16:16
+
+[Part 1] Encouragement:
+That's a great idea! Organizing prompts for GPT agents can definitely help streamline the process of generating text using these powerful models. It can make the workflow more efficient and organized for users who rely on these AI tools. Keep exploring this concept and think about how you can add unique features or functionalities to make your app stand out in the market. Good luck with your project!
+
+[Part 2] Critique:
+One challenge to consider is ensuring that the prompts provided are diverse and comprehensive enough to cover a wide range of topics and writing styles. This will require a thoughtful curation process to cater to various user needs.
+
+Additionally, it would be beneficial to incorporate a feature that allows users to customize and save their favorite prompts for future use, enhancing the user experience and increasing the app's value proposition.
+
+[Part 3] Refined Idea:
+Create a Prompts Generator App that offers a wide range of diverse and customizable writing prompts. Users can curate their own prompt collections, ensuring they always have inspiration at their fingertips. Let creativity flourish with personalized prompts tailored to individual preferences and styles.
+
+Chat History stored in memory (this session only):
+Human: An app that organizes prompts for GPT agents
+Ai: Create a Prompts Generator App that offers a wide range of diverse and customizable writing prompts. Users can curate their own prompt collections, ensuring they always have inspiration at their fingertips. Let creativity flourish with personalized prompts tailored to individual preferences and styles.
