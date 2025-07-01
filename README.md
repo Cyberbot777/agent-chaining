@@ -1,34 +1,55 @@
 # agent-chaining
 
-This project demonstrates how to build modular, memory-aware, multi-step AI agents using [LangChain](https://www.langchain.com/) and OpenAI.
+This project demonstrates how to build modular, multi-step AI agents using [LangChain](https://www.langchain.com/) and OpenAI — designed for testing, learning, and extending intelligent prompt workflows.
 
-The main agent, **Professor Ted**, is a full-stack coding coach designed to help junior developers shape, critique, and improve their project ideas step-by-step.
+---
+
+## Agents Included
+
+### Professor Ted  
+A full-stack coding coach that helps junior developers shape, critique, and refine their project ideas in three steps:
+
+- Encouragement  
+- Constructive critique  
+- Refined next step
+
+Uses `ConversationBufferMemory` for session awareness.
+
+---
+
+### Nightingale  
+A journaling reflection agent that responds to user entries with gentle insight, built from layered understanding. Internally:
+
+- Step 1: Emotional summary  
+- Step 2: Gentle insight  
+- Step 3: Reflection question  
+- Step 4: Final message (summarized from all above)
+
+Returns a **single warm reflection message** as seen in the Nightingale journaling web app.
 
 ---
 
 ## Features
 
 - Built with LangChain `0.3.26` using LCEL (`RunnableLambda`)
-- Structured 3-part coaching flow:
-  - Encouragement
-  - Constructive critique
-  - Refined next step
-- In-memory conversation buffer for multi-step contextual continuity (per session)
-- Timestamp and persona baked into output
-- Modular chain structure for easy reuse and extension
+- Structured multi-step chains with intermediate prompt logic
+- Modular agent system (selectable via CLI at runtime)
+- In-memory or stateless chain patterns (depending on agent)
+- Clean output breakdown and message formatting
+- Optional output logging for chain evaluation (planned)
 
 ---
 
-## Memory Behavior
+## Agent Menu Example
 
-This project uses `ConversationBufferMemory` from LangChain to simulate short-term memory during a single run:
+```bash
+$ python run_agent.py
 
-- Memory is manually updated using `.add_user_message()` and `.add_ai_message()` after each chain invocation
-- The memory is **in-memory only** — it resets every time you restart the script
-- Chat history is passed into each step of the chain using `MessagesPlaceholder("chat_history")`
-- At the end of each session, all stored messages are printed to the terminal for visibility
+Which agent would you like to run?
 
-This approach is ideal for testing how conversation context flows through chained steps — no database or file logging is needed.
+1. Professor Ted (project feedback)
+2. Nightingale (journal reflection)
+```
 
 ---
 
@@ -40,10 +61,11 @@ agent-chaining/
 ├── README.md                     # Project documentation (this file)
 └── chain-lab/
     ├── chains/
-    │   └── professor_ted.py      # Agent chain definition using RunnableLambda
+    │   ├── professor_ted.py      # Ted's chain definition
+    │   └── journal_reflection.py # Nightingale's multi-step reflection chain
+    ├── run_agent.py              # Dynamic CLI launcher
     ├── logs.txt                  # Optional logging output
-    ├── main.py                   # Entry point to run Professor Ted
-    └── requirements.txt          # Python dependencies
+    ├── requirements.txt          # Python dependencies
 ```
 
 ---
@@ -85,7 +107,7 @@ agent-chaining/
 6. Run the agent:
 
    ```bash
-   python main.py
+   python run_agent.py
    ```
 
 ---
@@ -95,14 +117,16 @@ agent-chaining/
 - Python 3.13+
 - LangChain `0.3.26`
 - `langchain-openai`
-- LCEL + `RunnableLambda` chaining
-- `ConversationBufferMemory` (in-memory only)
+- LCEL chaining via `RunnableLambda`
+- `PromptTemplate` + `StrOutputParser`
+- In-memory message handling (for Professor Ted)
 
 ---
 
 ## Planned Improvements
 
-- Add streaming and UI layer
-- Support follow-up conversations with memory context
-- Introduce additional coaching roles (e.g., design mentor, ethics coach)
-- Export coaching transcripts to file or database
+- Output logging (`logs.txt`) with structured JSON lines
+- Evaluation pipeline to test tone, clarity, usefulness
+- A/B testing of different prompt versions or models
+- Nightingale RAG-mode: include past journal entries via memory or context injection
+- Web-based UI integration (streamed output + token cost monitoring)
